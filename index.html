@@ -147,11 +147,6 @@
 
         function timerLoop() {
             const now = moment.tz('America/Los_Angeles');
-            now
-                .add(7, 'day')
-                .add(19, 'hour')
-                .add(1, 'minute')
-                .add(25, 'second')
             const next = getNextPatchTuesday(now);
             if (!next.isSame(nextPatchTuesday)) {
                 nextPatchTuesday = next;
