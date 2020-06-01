@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Microsoft Patch Tuesday Countdown 🐱‍💻</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        }
+
+        a {
+            color: white;
+        }
+
+        .bgImageContainer {
+            background-image: url(data:image/jpeg;base64,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);
+            background-size: cover;
+            background-position: center;
+            min-width: 100vw;
+            min-height: 100vh;
+            filter: blur(12px);
+            z-index: 0;
+            position: absolute;
+        }
+
+        .content {
+            z-index: 1;
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-flow {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            border: 2px solid #FFF;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .countdown-val-box {
+            text-align: center;
+            font-size: 28px;
+            padding: 30px 0 40px 0;
+        }
+
+        .countdown-val {
+            font-size: 72px;
+        }
+
+        .info {
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bgImageContainer"></div>
+    <div class="content">
+        <div class="main-flow">
+            <div class="title">
+                <h1>Microsoft Patch Tuesday Countdown 🐱‍💻</h1>
+            </div>
+            <div class="countdown">
+                <div class="countdown-val-box">
+                    <div id="countdown-val-days" class="countdown-val">🐱‍🏍</div>
+                    Days
+                </div>
+                <div class="countdown-val-box">
+                    <div id="countdown-val-hours" class="countdown-val">🐱‍👤</div>
+                    Hours
+                </div>
+                <div class="countdown-val-box">
+                    <div id="countdown-val-minutes" class="countdown-val">🐱‍👓</div>
+                    Minutes
+                </div>
+                <div class="countdown-val-box">
+                    <div id="countdown-val-seconds" class="countdown-val">🐱‍🐉</div>
+                    Seconds
+                </div>
+            </div>
+            <div class="info">
+                <div class="info-line">Last Patch Tuesday: <span id="last-patch-tuesday-date">calculating...</span>
+                </div>
+                <div class="info-line">Next Patch Tuesday: <span id="next-patch-tuesday-date">calculating...</span>
+                </div>
+                <div class="info-line">
+                    <a href="https://portal.msrc.microsoft.com/en-us/security-guidance" target="_blank">
+                        MSRC Security Update Guide
+                    </a>
+                </div>
+            </div>
+            <div class="footer">
+                By <a href="https://m417z.com/" target="_blank">m417z</a>
+            </div>
+        </div>
+    </div>
+    <script src="moment.min.js" type="text/javascript"></script>
+    <script src="moment-timezone-with-data.min.js" type="text/javascript"></script>
+    <script>
+        let nextPatchTuesday = null;
+
+        function getPatchTuesdayOfMonth(date) {
+            date.date(1);
+            if (date.day() > 2) {
+                date.day(2 + 7);
+            }
+            date.day(2 + 7);
+            date.hour(10).minute(0).second(0).milliseconds(0);
+        }
+
+        function getNextPatchTuesday(now) {
+            let next = now.clone();
+            getPatchTuesdayOfMonth(next);
+            if (now > next) {
+                next.add(1, 'month');
+                getPatchTuesdayOfMonth(next);
+            }
+
+            return next;
+        }
+
+        function timerLoop() {
+            const now = moment.tz('America/Los_Angeles');
+            now
+                .add(7, 'day')
+                .add(19, 'hour')
+                .add(1, 'minute')
+                .add(25, 'second')
+            const next = getNextPatchTuesday(now);
+            if (!next.isSame(nextPatchTuesday)) {
+                nextPatchTuesday = next;
+                let last = next.clone().add(-1, 'month');
+                getPatchTuesdayOfMonth(last);
+                document.getElementById('last-patch-tuesday-date').textContent = last.format('LL').split(',')[0];
+                document.getElementById('next-patch-tuesday-date').textContent = next.format('LL').split(',')[0];
+            }
+
+            const duration = moment.duration(next.diff(now));
+
+            if (Math.floor(duration.asSeconds()) > 0) {
+                const days = Math.floor(duration.asDays());
+                const hours = duration.hours();
+                const minutes = duration.minutes();
+                const seconds = duration.seconds();
+
+                document.getElementById('countdown-val-days').textContent = days;
+                document.getElementById('countdown-val-hours').textContent = hours;
+                document.getElementById('countdown-val-minutes').textContent = minutes;
+                document.getElementById('countdown-val-seconds').textContent = seconds;
+            } else {
+                document.getElementById('countdown-val-days').textContent = '🙀';
+                document.getElementById('countdown-val-hours').textContent = '🙀';
+                document.getElementById('countdown-val-minutes').textContent = '🙀';
+                document.getElementById('countdown-val-seconds').textContent = '🙀';
+            }
+
+            const milliseconds = duration.milliseconds();
+
+            /*console.log(`
+                Days: ${days}
+                Hours: ${hours}
+                Minutes: ${minutes}
+                Seconds: ${seconds}
+                Milliseconds: ${milliseconds}
+                `);*/
+
+            setTimeout(timerLoop, milliseconds);
+        }
+
+        timerLoop();
+    </script>
+</body>
+
+</html>
