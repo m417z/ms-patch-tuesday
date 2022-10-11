@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Microsoft Patch Tuesday Countdown 🐱‍💻</title>
+    <title>Microsoft Patch Tuesday Countdown</title>
+    <link rel="shortcut icon" href="hacker-cat.png">
     <style>
         body {
             overflow-x: hidden;
@@ -31,6 +32,7 @@
         }
 
         .content {
+            visibility: hidden;
             z-index: 1;
             position: relative;
             max-width: 1200px;
@@ -48,6 +50,11 @@
 
         .title {
             text-align: center;
+        }
+
+        .title img {
+            height: 40px;
+            vertical-align: text-top;
         }
 
         .countdown {
@@ -87,33 +94,33 @@
     <div class="content">
         <div class="main-flow">
             <div class="title">
-                <h1>Microsoft Patch Tuesday Countdown 🐱‍💻</h1>
+                <h1>Microsoft Patch Tuesday Countdown <img src="hacker-cat.png" alt="Hacker Cat"></h1>
             </div>
             <div class="countdown">
                 <div class="countdown-val-box">
-                    <div id="countdown-val-days" class="countdown-val">🐱‍🏍</div>
+                    <div id="countdown-val-days" class="countdown-val"></div>
                     Days
                 </div>
                 <div class="countdown-val-box">
-                    <div id="countdown-val-hours" class="countdown-val">🐱‍👤</div>
+                    <div id="countdown-val-hours" class="countdown-val"></div>
                     Hours
                 </div>
                 <div class="countdown-val-box">
-                    <div id="countdown-val-minutes" class="countdown-val">🐱‍👓</div>
+                    <div id="countdown-val-minutes" class="countdown-val"></div>
                     Minutes
                 </div>
                 <div class="countdown-val-box">
-                    <div id="countdown-val-seconds" class="countdown-val">🐱‍🐉</div>
+                    <div id="countdown-val-seconds" class="countdown-val"></div>
                     Seconds
                 </div>
             </div>
             <div class="info">
-                <div class="info-line">Last Patch Tuesday: <span id="last-patch-tuesday-date">calculating...</span>
+                <div class="info-line">Last Patch Tuesday: <span id="last-patch-tuesday-date"></span>
                 </div>
-                <div class="info-line">Next Patch Tuesday: <span id="next-patch-tuesday-date">calculating...</span>
+                <div class="info-line">Next Patch Tuesday: <span id="next-patch-tuesday-date"></span>
                 </div>
                 <div class="info-line">
-                    <a href="https://portal.msrc.microsoft.com/en-us/security-guidance" target="_blank">
+                    <a href="https://msrc.microsoft.com/en-us/security-guidance" target="_blank">
                         MSRC Security Update Guide
                     </a>
                 </div>
@@ -132,54 +139,61 @@
 
         gtag('config', 'UA-143074342-1');
     </script>
-    <script src="moment.min.js" type="text/javascript"></script>
-    <script src="moment-timezone-with-data.min.js" type="text/javascript"></script>
+    <script src="luxon.min.js"></script>
     <script>
+    (function () {
+        'use strict';
+
+        const { DateTime } = luxon;
+
         let nextPatchTuesday = null;
 
-        function getPatchTuesdayOfMonth(date) {
-            date.date(1);
-            if (date.day() > 2) {
-                date.day(2 + 7);
-            }
-            date.day(2 + 7);
-            date.hour(10).minute(0).second(0).milliseconds(0);
+        // https://github.com/moment/luxon/issues/163#issuecomment-359044467
+        function nextify(unit, nextUnit) {
+            return (dt, value) =>
+                (dt.get(unit) >= value ? dt.plus({ [nextUnit]: 1 }) : dt).set({ [unit]: value });
         }
 
-        function getNextPatchTuesday(now) {
-            let next = now.clone();
-            getPatchTuesdayOfMonth(next);
-            if (now > next) {
-                next.add(1, 'month');
-                getPatchTuesdayOfMonth(next);
+        function getPatchTuesdayOfMonth(date) {
+            const nextWeekday = nextify('weekday', 'week');
+
+            let patchTuesday = date.set({ day: 1, hour: 10, minute: 0, second: 0, millisecond: 0 });
+            if (patchTuesday.weekday !== 2) {
+                patchTuesday = nextWeekday(patchTuesday, 2);
+            }
+            patchTuesday = nextWeekday(patchTuesday, 2);
+            return patchTuesday;
+        }
+
+        function getNextPatchTuesday(date) {
+            let next = getPatchTuesdayOfMonth(date);
+            if (next < date) {
+                next = next.plus({ months: 1 });
+                next = getPatchTuesdayOfMonth(next);
             }
 
             return next;
         }
 
         function timerLoop() {
-            const now = moment.tz('America/Los_Angeles');
+            const now = DateTime.now().setZone('America/Los_Angeles');
             const next = getNextPatchTuesday(now);
-            if (!next.isSame(nextPatchTuesday)) {
+            if (!nextPatchTuesday || !next.equals(nextPatchTuesday)) {
                 nextPatchTuesday = next;
-                let last = next.clone().add(-1, 'month');
-                getPatchTuesdayOfMonth(last);
-                document.getElementById('last-patch-tuesday-date').textContent = last.format('LL').split(',')[0];
-                document.getElementById('next-patch-tuesday-date').textContent = next.format('LL').split(',')[0];
+                const last = getPatchTuesdayOfMonth(next.minus({ months: 1 }));
+                document.getElementById('last-patch-tuesday-date').textContent = last.toFormat('MMMM d');
+                document.getElementById('next-patch-tuesday-date').textContent = next.toFormat('MMMM d');
             }
 
-            const duration = moment.duration(next.diff(now));
+            // toUTC() is necessary in case of a different time zone due to daylight savings time.
+            const duration = next.toUTC().diff(now.toUTC(), ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
+            const durationUnits = duration.toObject();
 
-            if (Math.floor(duration.asSeconds()) > 0) {
-                const days = Math.floor(duration.asDays());
-                const hours = duration.hours();
-                const minutes = duration.minutes();
-                const seconds = duration.seconds();
-
-                document.getElementById('countdown-val-days').textContent = days;
-                document.getElementById('countdown-val-hours').textContent = hours;
-                document.getElementById('countdown-val-minutes').textContent = minutes;
-                document.getElementById('countdown-val-seconds').textContent = seconds;
+            if (duration.as('seconds') >= 1) {
+                document.getElementById('countdown-val-days').textContent = durationUnits.days;
+                document.getElementById('countdown-val-hours').textContent = durationUnits.hours;
+                document.getElementById('countdown-val-minutes').textContent = durationUnits.minutes;
+                document.getElementById('countdown-val-seconds').textContent = durationUnits.seconds;
             } else {
                 document.getElementById('countdown-val-days').textContent = '🙀';
                 document.getElementById('countdown-val-hours').textContent = '🙀';
@@ -187,20 +201,12 @@
                 document.getElementById('countdown-val-seconds').textContent = '🙀';
             }
 
-            const milliseconds = duration.milliseconds();
-
-            /*console.log(`
-                Days: ${days}
-                Hours: ${hours}
-                Minutes: ${minutes}
-                Seconds: ${seconds}
-                Milliseconds: ${milliseconds}
-                `);*/
-
-            setTimeout(timerLoop, milliseconds);
+            setTimeout(timerLoop, durationUnits.milliseconds);
         }
 
         timerLoop();
+        document.querySelector('.content').style.visibility = 'visible';
+    })();
     </script>
 </body>
 
