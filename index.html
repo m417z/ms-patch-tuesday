@@ -176,7 +176,7 @@
         }
 
         function timerLoop() {
-            const now = DateTime.now().setZone('America/Los_Angeles');
+            const now = DateTime.local({ zone: 'America/Los_Angeles' });
             const next = getNextPatchTuesday(now);
             if (!nextPatchTuesday || !next.equals(nextPatchTuesday)) {
                 nextPatchTuesday = next;
@@ -186,13 +186,12 @@
             }
 
             const duration = next.diff(now, ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
-            const durationUnits = duration.toObject();
 
             if (duration.as('seconds') >= 1) {
-                document.getElementById('countdown-val-days').textContent = durationUnits.days;
-                document.getElementById('countdown-val-hours').textContent = durationUnits.hours;
-                document.getElementById('countdown-val-minutes').textContent = durationUnits.minutes;
-                document.getElementById('countdown-val-seconds').textContent = durationUnits.seconds;
+                document.getElementById('countdown-val-days').textContent = duration.days;
+                document.getElementById('countdown-val-hours').textContent = duration.hours;
+                document.getElementById('countdown-val-minutes').textContent = duration.minutes;
+                document.getElementById('countdown-val-seconds').textContent = duration.seconds;
             } else {
                 document.getElementById('countdown-val-days').textContent = '🙀';
                 document.getElementById('countdown-val-hours').textContent = '🙀';
@@ -200,7 +199,7 @@
                 document.getElementById('countdown-val-seconds').textContent = '🙀';
             }
 
-            setTimeout(timerLoop, durationUnits.milliseconds);
+            setTimeout(timerLoop, duration.milliseconds);
         }
 
         timerLoop();
