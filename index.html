@@ -185,8 +185,7 @@
                 document.getElementById('next-patch-tuesday-date').textContent = next.toFormat('MMMM d');
             }
 
-            // toUTC() is necessary in case of a different time zone due to daylight savings time.
-            const duration = next.toUTC().diff(now.toUTC(), ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
+            const duration = next.diff(now, ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
             const durationUnits = duration.toObject();
 
             if (duration.as('seconds') >= 1) {
