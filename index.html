@@ -185,7 +185,8 @@
                 document.getElementById('next-patch-tuesday-date').textContent = next.toFormat('MMMM d');
             }
 
-            const duration = next.diff(now, ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
+            // toUTC() is necessary in case of a different time zone due to daylight savings time.
+            const duration = next.toUTC().diff(now.toUTC(), ['days', 'hours', 'minutes', 'seconds', 'milliseconds']);
 
             if (duration.as('seconds') >= 1) {
                 document.getElementById('countdown-val-days').textContent = duration.days;
